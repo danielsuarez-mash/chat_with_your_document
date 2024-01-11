@@ -21,7 +21,10 @@ def authenticate():
 
     # if running on cloud
     try:
-        os.environ('HUGGINGFACEHUB_API_TOKEN')
+        os.environ["HUGGINGFACEHUB_API_TOKEN"]
+        st.write(
+	        "Has environment variables been set:",
+	        os.environ["HUGGINGFACEHUB_API_TOKEN"] == st.secrets["HUGGINGFACEHUB_API_TOKEN"])
     except:
         load_dotenv()
         os.environ.get('HUGGINGFACEHUB_API_TOKEN')
