@@ -1,0 +1,10 @@
+streamlit
+pypdf2
+langchain
+pip
+huggingface-hub
+faiss-cpu
+instructorembedding
+python-dotenv
+sentence-transformers
+transformers
