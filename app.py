@@ -8,7 +8,6 @@ from langchain_community.vectorstores import FAISS
 from langchain.prompts import PromptTemplate
 from langchain_community.llms import HuggingFaceHub
 from langchain_core.runnables import RunnablePassthrough
-from langchain_core.runnables import RunnableSequence
 from langchain_core.output_parsers import StrOutputParser
 
 st.title('LLM - Retrieval Augmented Generation')
@@ -21,7 +20,6 @@ def authenticate():
 
     # if running on cloud
     try:
-        os.environ["HUGGINGFACEHUB_API_TOKEN"]
         st.write(
 	        "Has environment variables been set:",
 	        os.environ["HUGGINGFACEHUB_API_TOKEN"] == st.secrets["HUGGINGFACEHUB_API_TOKEN"])
@@ -50,12 +48,12 @@ def load_pdf(pdf):
     
     return text
 
-def split_text(text):
+def split_text(text, chunk_size=400, chunk_overlap=20):
 
     # split
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=400,
-        chunk_overlap=20,
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
         separators=["\n\n", "\n", " ", ""]
     )
 
@@ -123,6 +121,7 @@ def main():
 
         # load split store
         vectorstore = load_split_store(pdf)
+        st.write('PDF vectorized')
 
         # create a retriever using vectorstore
         retriever = vectorstore.as_retriever()
