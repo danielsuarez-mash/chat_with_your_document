@@ -14,8 +14,13 @@ st.title('LLM - Retrieval Augmented Generation')
 
 # user-input
 pdf = st.file_uploader(label='Upload PDF')
-chunk_size = st.number_input(label='Chunk size', value=500, step=10)
-chunk_overlap = st.number_input(label='Chunk overlap', value=20, step=10)
+
+# sidebar parameters
+with st.sidebar:
+    chunk_size = st.number_input(label='Chunk size', value=500, step=10)
+    chunk_overlap = st.number_input(label='Chunk overlap', value=20, step=10)
+
+# question
 question = st.text_input(label='Question')
 
 def authenticate():
