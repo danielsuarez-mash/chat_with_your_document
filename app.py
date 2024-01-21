@@ -12,13 +12,33 @@ from langchain_core.output_parsers import StrOutputParser
 
 st.title('LLM - Retrieval Augmented Generation')
 
+models = ['tiiuae/falcon-7b-instruct', 'mistralai/Mistral-7B-v0.1']
+
 # user-input
 pdf = st.file_uploader(label='Upload PDF')
 
+# define new template for RAG
+default_template = """You are an assistant for question-answering tasks. 
+Use the following pieces of retrieved context to answer the question. 
+If you don't know the answer, say that you don't know. 
+
+Question: {question} 
+Context: {context} 
+Answer:"""
+
 # sidebar parameters
 with st.sidebar:
-    chunk_size = st.number_input(label='Chunk size', value=500, step=10)
-    chunk_overlap = st.number_input(label='Chunk overlap', value=20, step=10)
+
+    st.write('# Retrieval parameters')
+    chunk_size = st.number_input(label='Chunk size', value=250, step=10)
+    chunk_overlap = st.number_input(label='Chunk overlap', value=50, step=10)
+
+    st.write('# Prompt')
+    rag_template = st.text_area(label='Prompt template', value=default_template, height=250)
+
+    st.write('# LLM parameters')
+    model = st.selectbox(label='Model', options=models, index=0)
+    temperature = st.slider(label='Model Temperature', min_value=0.1, max_value=float(10), value=float(1), step=0.1)
 
 # question
 question = st.text_input(label='Question')
@@ -32,10 +52,9 @@ def authenticate():
         st.write('Cannot find HugginFace API token. Ensure it is located in .streamlit/secrets.toml')
 
 def load_pdf(pdf):
-    
+
     reader = PdfReader(pdf)
 
-    # page_limit = st.number_input(label='Page limit', value=len(reader.pages), step=1)
     page_limit = len(reader.pages)
 
     if page_limit is None:
@@ -91,36 +110,44 @@ def load_split_store(pdf, chunk_size, chunk_overlap):
 def format_docs(docs):
         return "\n\n".join(doc.page_content for doc in docs)
 
-def main():
-
-    # authenticate
-    authenticate()
-
-    # define new template for RAG
-    rag_template = """
-    You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
-    Question: {question} 
-    Context: {context} 
-    Answer:
-    """
+@st.cache_resource
+def instantiate_llm(model, temperature):
 
     # instantiate llm
     llm = HuggingFaceHub(
-        repo_id='tiiuae/falcon-7b-instruct',
+        repo_id=model,
         model_kwargs={
-            # 'temperature':1,
+            'temperature':temperature,
             # 'penalty_alpha':2,
             # 'top_k':50,
             # # 'max_length': 1000
         }
     )
 
+    return llm
+
+@st.cache_resource
+def instantiate_prompt(rag_template, _llm):
+
     # build prompt
     prompt = PromptTemplate(
         template=rag_template, 
-        llm=llm, 
+        llm=_llm, 
         input_variables=['question', 'context']
     )
+
+    return prompt
+
+def main():
+
+    # authenticate
+    authenticate()
+
+    # instantiate llm
+    llm = instantiate_llm(model, temperature)
+
+    # build prompt
+    prompt = instantiate_prompt(rag_template, llm)
     
     # if a PDF exists
     if pdf is not None:
