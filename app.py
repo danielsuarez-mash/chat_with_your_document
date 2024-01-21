@@ -12,31 +12,29 @@ from langchain_core.output_parsers import StrOutputParser
 
 st.title('LLM - Retrieval Augmented Generation')
 
+# user-input
 pdf = st.file_uploader(label='Upload PDF')
-
+chunk_size = st.number_input(label='Chunk size', value=500, step=10)
+chunk_overlap = st.number_input(label='Chunk overlap', value=20, step=10)
 question = st.text_input(label='Question')
 
 def authenticate():
 
-    # if running on cloud
     try:
-        st.write(
-	        "Has environment variables been set:",
-	        os.environ["HUGGINGFACEHUB_API_TOKEN"] == st.secrets["HUGGINGFACEHUB_API_TOKEN"])
+        st.write('Authenticated with HuggingFace:', 
+                 os.environ["HUGGINGFACEHUB_API_TOKEN"] == st.secrets["HUGGINGFACEHUB_API_TOKEN"])
     except:
-        load_dotenv()
-        os.environ.get('HUGGINGFACEHUB_API_TOKEN')
+        st.write('Cannot find HugginFace API token. Ensure it is located in .streamlit/secrets.toml')
 
 def load_pdf(pdf):
     
     reader = PdfReader(pdf)
 
-    page_limit = st.number_input(label='Page limit', value=len(reader.pages), step=1)
+    # page_limit = st.number_input(label='Page limit', value=len(reader.pages), step=1)
+    page_limit = len(reader.pages)
 
     if page_limit is None:
         page_limit=len(reader.pages)
-
-    
     
     text = ""
 
@@ -45,6 +43,9 @@ def load_pdf(pdf):
         page_text = reader.pages[i].extract_text()
 
         text += page_text
+    
+    # if st.toggle(label='Show text'):
+    #     st.write(text)
     
     return text
 
@@ -72,11 +73,12 @@ def store_text(chunks):
 
     return vectorstore
 
-def load_split_store(pdf):
+@st.cache_resource
+def load_split_store(pdf, chunk_size, chunk_overlap):
     
     # load split store
     text = load_pdf(pdf=pdf)
-    chunks = split_text(text)
+    chunks = split_text(text, chunk_size, chunk_overlap)
     vectorstore = store_text(chunks)
 
     return vectorstore
@@ -114,14 +116,13 @@ def main():
         llm=llm, 
         input_variables=['question', 'context']
     )
-
     
     # if a PDF exists
     if pdf is not None:
 
         # load split store
-        vectorstore = load_split_store(pdf)
-        st.write('PDF vectorized')
+        vectorstore = load_split_store(pdf, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        st.write('PDF processed')
 
         # create a retriever using vectorstore
         retriever = vectorstore.as_retriever()
@@ -138,9 +139,9 @@ def main():
             | llm
             | StrOutputParser()
         )
-
+        
         # button press
-        if st.button(label='Process'):
+        if st.button(label='Ask question'):
             with st.spinner('Processing'):
 
                 # context
@@ -150,6 +151,8 @@ def main():
                 # answer
                 st.write('# Answer')
                 st.write(generation_chain.invoke(question))
+
+
 
 if __name__=='__main__':
     main()
