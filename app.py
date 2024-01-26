@@ -12,20 +12,22 @@ from langchain_core.output_parsers import StrOutputParser
 
 st.title('LLM - Retrieval Augmented Generation')
 
-models = ['tiiuae/falcon-7b-instruct', 'mistralai/Mistral-7B-v0.1']
+models = ['tiiuae/falcon-7b-instruct', 'mistralai/Mistral-7B-v0.1', 'HuggingFaceH4/zephyr-7b-beta']
 
 # user-input
 pdf = st.file_uploader(label='Upload PDF')
 
 # define new template for RAG
+start_metatag = "<s>[INST]"
 default_template = """You are an assistant for question-answering tasks. 
 Use the following pieces of retrieved context to answer the question. 
 If you don't know the answer, say that you don't know. 
+Never stop generating mid-sentence.
 
 Question: {question} 
 Context: {context} 
 Answer:"""
-
+end_metatag = "[/INST]"
 # sidebar parameters
 with st.sidebar:
 
@@ -39,6 +41,9 @@ with st.sidebar:
     st.write('# LLM parameters')
     model = st.selectbox(label='Model', options=models, index=0)
     temperature = st.slider(label='Model Temperature', min_value=0.1, max_value=float(10), value=float(1), step=0.1)
+
+# full template
+template = start_metatag + '\n\n' + rag_template + '\n\n' + end_metatag    
 
 # question
 question = st.text_input(label='Question')
@@ -127,15 +132,14 @@ def instantiate_llm(model, temperature):
     return llm
 
 @st.cache_resource
-def instantiate_prompt(rag_template, _llm):
+def instantiate_prompt(_llm, template=template):
 
     # build prompt
     prompt = PromptTemplate(
-        template=rag_template, 
+        template=template, 
         llm=_llm, 
         input_variables=['question', 'context']
     )
-
     return prompt
 
 def main():
@@ -147,7 +151,7 @@ def main():
     llm = instantiate_llm(model, temperature)
 
     # build prompt
-    prompt = instantiate_prompt(rag_template, llm)
+    prompt = instantiate_prompt(_llm=llm)
     
     # if a PDF exists
     if pdf is not None:
