@@ -1,6 +1,8 @@
 streamlit
 pypdf2
 langchain==0.1.0
+langchain-core==0.1.9
+langchain-community==0.0.11
 pip
 huggingface-hub==0.17.3
 faiss-cpu
