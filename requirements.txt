@@ -1,10 +1,10 @@
 streamlit
 pypdf2
-langchain
+langchain==0.1.0
 pip
 huggingface-hub==0.17.3
 faiss-cpu
 instructorembedding
 python-dotenv
 sentence-transformers==2.2.2
-transformers
+transformers==4.35.0
