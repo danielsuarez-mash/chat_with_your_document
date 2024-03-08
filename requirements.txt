@@ -2,7 +2,7 @@ streamlit
 pypdf2
 langchain
 pip
-huggingface-hub
+huggingface-hub==0.17.3
 faiss-cpu
 instructorembedding
 python-dotenv
