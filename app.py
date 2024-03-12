@@ -12,7 +12,10 @@ from langchain_core.output_parsers import StrOutputParser
 
 st.title('LLM - Retrieval Augmented Generation')
 
-models = ['tiiuae/falcon-7b-instruct', 'mistralai/Mistral-7B-v0.1', 'HuggingFaceH4/zephyr-7b-beta']
+models = ['tiiuae/falcon-7b-instruct', 
+          'mistralai/Mistral-7B-v0.1', 
+          'HuggingFaceH4/zephyr-7b-beta',
+          'google/gemma-7b-it']
 
 # user-input
 pdf = st.file_uploader(label='Upload PDF')
@@ -26,7 +29,8 @@ Never stop generating mid-sentence.
 
 Question: {question} 
 Context: {context} 
-Answer:"""
+Answer:
+"""
 end_metatag = "[/INST]"
 # sidebar parameters
 with st.sidebar:
