@@ -13,10 +13,12 @@ from langchain_core.output_parsers import StrOutputParser
 st.title('LLM - Retrieval Augmented Generation')
 
 model_names = ['tiiuae/falcon-7b-instruct', 
-                'google/gemma-2-2b']
+                'google/gemma-2-2b',
+                'mistralai/Mistral-7B-v0.1']
 
 api_urls = ['https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct',
-            'https://api-inference.huggingface.co/models/google/gemma-2-2b']
+            'https://api-inference.huggingface.co/models/google/gemma-2-2b',
+            "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1"]
 
 model_dict = dict(zip(model_names, api_urls))
 
@@ -137,7 +139,7 @@ def instantiate_llm(model, temperature):
     )
 
     llm.client.api_url = model_dict[str(model)]
-    
+
     return llm
 
 @st.cache_resource
@@ -201,5 +203,3 @@ def main():
 
 if __name__=='__main__':
     main()
-
-
