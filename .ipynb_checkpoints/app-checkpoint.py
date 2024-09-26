@@ -12,16 +12,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 st.title('LLM - Retrieval Augmented Generation')
 
-model_names = ['tiiuae/falcon-7b-instruct', 
-                'google/gemma-2-2b',
-                'mistralai/Mistral-7B-v0.1',
-                'mistralai/Mixtral-8x7B-Instruct-v0.1']
-
-# api_urls = ['https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct',
-#             'https://api-inference.huggingface.co/models/google/gemma-2-2b',
-#             "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1"]
-
-# model_dict = dict(zip(model_names, api_urls))
+models = ['tiiuae/falcon-7b-instruct', 'mistralai/Mistral-7B-v0.1', 'HuggingFaceH4/zephyr-7b-beta']
 
 # user-input
 pdf = st.file_uploader(label='Upload PDF')
@@ -35,8 +26,7 @@ Never stop generating mid-sentence.
 
 Question: {question} 
 Context: {context} 
-Answer:
-"""
+Answer:"""
 end_metatag = "[/INST]"
 # sidebar parameters
 with st.sidebar:
@@ -49,7 +39,7 @@ with st.sidebar:
     rag_template = st.text_area(label='Prompt template', value=default_template, height=250)
 
     st.write('# LLM parameters')
-    model = st.selectbox(label='Model', options=model_names, index=0)
+    model = st.selectbox(label='Model', options=models, index=0)
     temperature = st.slider(label='Model Temperature', min_value=0.1, max_value=float(10), value=float(1), step=0.1)
 
 # full template
@@ -139,8 +129,6 @@ def instantiate_llm(model, temperature):
         }
     )
 
-    # llm.client.api_url = model_dict[str(model)]
-
     return llm
 
 @st.cache_resource
@@ -204,3 +192,5 @@ def main():
 
 if __name__=='__main__':
     main()
+
+
