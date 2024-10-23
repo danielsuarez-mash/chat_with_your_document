@@ -17,12 +17,6 @@ model_names = ['tiiuae/falcon-7b-instruct',
                 'mistralai/Mistral-7B-v0.1',
                 'mistralai/Mixtral-8x7B-Instruct-v0.1']
 
-# api_urls = ['https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct',
-#             'https://api-inference.huggingface.co/models/google/gemma-2-2b',
-#             "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1"]
-
-# model_dict = dict(zip(model_names, api_urls))
-
 # user-input
 pdf = st.file_uploader(label='Upload PDF')
 
