@@ -41,7 +41,7 @@ for message in st.session_state.message_history:
         st.markdown(message.content)
 
 # display prompt
-if user_input := st.chat_input("Say something"):
+if user_input := st.chat_input("Say something", key=1):
     with st.chat_message("user"):
         st.markdown(user_input)
     
