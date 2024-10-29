@@ -1,4 +1,5 @@
 streamlit==1.38.0
+pypdf==5.0.0
 pypdf2==3.0.1
 langchain==0.3.1
 langchain-core==0.3.6
