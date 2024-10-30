@@ -5,7 +5,7 @@ colorFrom: gray
 colorTo: green
 sdk: streamlit
 sdk_version: 1.30.0
-app_file: 📃_RAG_Chatbot.py
+app_file: RAG_Chatbot.py
 pinned: false
 ---
 
@@ -16,8 +16,11 @@ Check out the configuration reference at https://huggingface.co/docs/hub/spaces-
 
 This project was aimed at learning more about large language models and how to use them via langchain. It contains:
 
-- a notebook which works through langchain's basic functionality
-- a streamlit application which allows a user to query a self-uploaded document
+- Notebooks dedicated to learning how to use LangChain.
+- a streamlit application which allows a user to query a self-uploaded PDF document
+
+For my blog post on this project, go [here](https://slender-nutria-bf6.notion.site/Chat-with-your-document-app-b141d8c1c7bd4f3cb812316315186f23?pvs=4).
 
 ## Running instructions
-To run the notebook or the application, install the python environment using the environment.yaml file included in this repo. You will also need to have a HuggingFace API token saved in a .bash_profile file in your home directory. To run the application, run streamlit dashboard/app.py from the repo location.
+If you'd like to run these notebooks and the application locally, install a python virtual environment using the environment.yaml file provided. Then, to run the app, run:
+streamlit run RAG_Chatbot.py in your terminal.
