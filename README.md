@@ -5,7 +5,7 @@ colorFrom: gray
 colorTo: green
 sdk: streamlit
 sdk_version: 1.30.0
-app_file: RAG_Chatbot.py
+app_file: PDF_chatbot.py
 pinned: false
 ---
 
@@ -23,4 +23,4 @@ For my blog post on this project, go [here](https://slender-nutria-bf6.notion.si
 
 ## Running instructions
 If you'd like to run these notebooks and the application locally, install a python virtual environment using the environment.yaml file provided. Then, to run the app, run:
-streamlit run RAG_Chatbot.py in your terminal.
+streamlit run PDF_chatbot.py in your terminal.
