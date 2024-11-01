@@ -16,7 +16,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.tracers import ConsoleCallbackHandler
 
-st.title('Advanced Chatbot - chat with your PDF')
+st.title('Chat with Derek about your PDF')
 
 # PDF upload
 with st.sidebar:
@@ -105,7 +105,7 @@ def build_qa_chain(chat_model):
 
     # question answering chain
     system_prompt = (
-        "You are an assistant for question-answering tasks. "
+        "You are an AI called Derek and you are an assistant for question-answering tasks. "
         "Use the following pieces of retrieved context to answer "
         "the question. If you don't know the answer, say that you "
         "don't know. Use three sentences maximum and keep the "
@@ -139,7 +139,10 @@ def instantiate_chat_history():
 
     # initialise chat history
     if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
+        st.session_state.chat_history = [
+            AIMessage(content="Hi! I'm Derek and here to assist you with any query you have about your PDF document. "
+                      "What would you like to learn about your PDF document today?")
+        ]
 
 def main():
 
